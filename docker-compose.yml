@@ -1,51 +1,36 @@
-version: "3.8"
+version: '3'
 services:
-    nginx:
-        build:
-            context: .
-            dockerfile: ./docker/nginx.Dockerfile
-        image: 999999999999.dkr.ecr.us-east-1.amazonaws.com/test:nginx
-        restart: always
-        depends_on:
-            - php
-        ports:
-            - "80"
-        networks:
-            - default
-        deploy:
-            replicas: 1
-            resources:
-                limits:
-                    cpus: '0.50'
-                    memory: 50M
-                reservations:
-                    cpus: '0.25'
-                    memory: 30M
-            restart_policy:
-                condition: any
-                delay: 5s
-                max_attempts: 5
-                window: 120s
+  webapp:
+    image: 851347696412.dkr.ecr.ap-northeast-1.amazonaws.com/laravel-app/webapp
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile.webapp
+    working_dir: /webapp
+    entrypoint: /usr/local/bin/php-fpm.sh
+    environment:
+      - APP_ENV=production
+    volumes:
+      - webapp:/webapp
+      - ./.env.docker:/webapp/.env
 
-    php:
-        build:
-            context: .
-            dockerfile: ./docker/php.Dockerfile
-        image: 999999999999.dkr.ecr.us-east-1.amazonaws.com/test:php
-        working_dir: /app
-        env_file: .env
-        restart: always
-        expose:
-            - "9000"
-        deploy:
-            replicas: 1
-            resources:
-                limits:
-                    cpus: '0.50'
-                    memory: 128M
-                reservations:
-                    cpus: '0.25'
-                    memory: 64M
-            restart_policy:
-                condition: any
-                window: 120s
+  nginx:
+    image: 851347696412.dkr.ecr.ap-northeast-1.amazonaws.com/laravel-app/nginx
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
+    working_dir: /webapp
+    volumes:
+      - webapp:/webapp
+      - ./containers/nginx/webapp.conf.docker:/etc/nginx/conf.d/webapp.conf
+    ports:
+      - 8380:8080
+    depends_on:
+      - webapp
+
+volumes:
+  webapp:
+    driver_opts:
+      type: none
+      device: .
+      o: bind
