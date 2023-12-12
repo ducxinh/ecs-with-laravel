@@ -44,10 +44,11 @@ COPY ./ /webapp/
 COPY --from=nodejs /usr/local/lib/node_modules /usr/local/lib/node_modules/
 COPY --from=nodejs /usr/local/bin/node /usr/local/bin/
 RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
-    && ln -s /usr/local/lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx \
-    && /usr/local/bin/npm install \
-    && npm run production \
-    && rm -rf /usr/local/lib/node_modules /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/node
+    && ln -s /usr/local/lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx 
+    # && ln -s /usr/local/lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx \
+    # && /usr/local/bin/npm install \
+    # && npm run production \
+    # && rm -rf /usr/local/lib/node_modules /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/node
 
 RUN composer dump-autoload
 RUN composer run post-autoload-dump
