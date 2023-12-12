@@ -1,6 +1,9 @@
 # Use the official PHP image with FPM
 FROM php:8.2-fpm
 
+WORKDIR /var/www/html
+
+
 # Install required dependencies
 RUN apt-get update \
     && apt-get install -y \
@@ -17,6 +20,12 @@ RUN apt-get update \
 # Install Composer globally
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+
+# COPY containers/webapp/*.sh /usr/local/bin/
+# COPY containers/webapp/php.ini /usr/local/etc/php/php.ini
+
+
+
 # TBD: This should move to entry point. initialize-laravel.sh === start
 RUN mkdir -p storage/ \
   && mkdir -p storage/app/public \
@@ -30,6 +39,8 @@ RUN mkdir -p storage/ \
   && chown -R www-data:www-data storage/ \
   && chown -R root bootstrap/
 # TBD: This should move to entry point. initialize-laravel.sh === End
+
+COPY composer* /webapp/
 
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
@@ -45,11 +56,12 @@ RUN { \
     } > /usr/local/etc/php/conf.d/recommended.ini
 
 # Set up Laravel
-WORKDIR /var/www/html
-COPY . .
 
 # Install Laravel dependencies
 RUN composer install --optimize-autoloader --no-dev
+
+
+COPY . .
 
 # Generate Laravel application key
 # RUN php artisan key:generate
