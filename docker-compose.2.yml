@@ -12,7 +12,8 @@ services:
       - PASSPORT_PUBLIC_KEY
       - PASSPORT_PRIVATE_KEY
     volumes:
-      - .env.docker:/webapp/.env
+      # - .env.docker:/webapp/.env
+      - .gitignore:/webapp/.gitignore
       - webapp:/webapp
 
 volumes:
