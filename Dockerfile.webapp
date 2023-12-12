@@ -1,0 +1,52 @@
+FROM composer AS composer
+FROM php:8.1-fpm
+
+COPY --from=composer /usr/bin/composer /usr/bin/composer
+RUN composer config -g repos.packagist composer https://packagist.jp
+
+WORKDIR /webapp
+
+RUN apt-get update \
+    && apt-get install -y \
+        libpng-dev \
+        libzip-dev \
+    && docker-php-ext-configure gd \
+    && docker-php-ext-install -j$(nproc) \
+        pdo \
+        pdo_mysql \
+        gd \
+        zip \
+    && apt-get autoremove -y \
+    && apt-get clean -y
+
+COPY containers/webapp/*.sh /usr/local/bin/
+COPY containers/webapp/php8.1.ini /usr/local/etc/php/php.ini
+
+RUN mkdir -p storage/ \
+  && mkdir -p storage/app/public \
+  && mkdir -p storage/framework \
+  && mkdir -p storage/framework/cache \
+  && mkdir -p storage/framework/sessions \
+  && mkdir -p storage/framework/testing \
+  && mkdir -p storage/framework/views \
+  && mkdir -p storage/logs \
+  && mkdir -p bootstrap/cache \
+  && chown -R www-data:www-data storage/ \
+  && chown -R root bootstrap/
+
+COPY composer* /webapp/
+RUN composer install --no-progress --no-autoloader --no-suggest --no-interaction --ignore-platform-reqs --no-ansi --no-scripts
+
+COPY ./ /webapp/
+
+# FIXME
+COPY ./secrets/oauth-private.key /webapp/secrets/
+COPY ./secrets/oauth-public.key /webapp/secrets/
+
+RUN composer dump-autoload
+RUN composer run post-autoload-dump
+
+
+RUN php artisan storage:link
+
+VOLUME ["/webapp", "/webapp/vendor", "/webapp/node_modules"]
