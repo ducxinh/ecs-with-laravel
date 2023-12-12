@@ -12,8 +12,8 @@ services:
       - PASSPORT_PUBLIC_KEY
       - PASSPORT_PRIVATE_KEY
     volumes:
-      - webapp:/webapp
       - .env:/webapp/.env
+      - webapp:/webapp
 
 volumes:
   webapp:
