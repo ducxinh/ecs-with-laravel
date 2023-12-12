@@ -12,13 +12,15 @@ services:
       - PASSPORT_PUBLIC_KEY
       - PASSPORT_PRIVATE_KEY
     volumes:
-      # - .env.docker:/webapp/.env
-      - .gitignore:/webapp/.gitignore
-      - webapp:/webapp
+      - ./:/var/www/html
+      # - ./.env.docker:/var/www/html/.env
+      # # - .env.docker:/webapp/.env
+      # - .gitignore:/webapp/.gitignore
+      # - webapp:/webapp
 
-volumes:
-  webapp:
-    driver_opts:
-      type: none
-      device: .
-      o: bind
+# volumes:
+#   webapp:
+#     driver_opts:
+#       type: none
+#       device: .
+#       o: bind

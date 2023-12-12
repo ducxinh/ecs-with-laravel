@@ -9,7 +9,7 @@ FROM php:8.2-fpm
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 RUN composer config -g repos.packagist composer https://packagist.jp
 
-WORKDIR /webapp
+WORKDIR /var/www/html
 
 RUN apt-get update \
     && apt-get install -y \
@@ -24,8 +24,8 @@ RUN apt-get update \
     && apt-get autoremove -y \
     && apt-get clean -y
 
-COPY containers/webapp/*.sh /usr/local/bin/
-COPY containers/webapp/php.ini /usr/local/etc/php/php.ini
+COPY containers/var/www/html/*.sh /usr/local/bin/
+COPY containers/var/www/html/php.ini /usr/local/etc/php/php.ini
 
 RUN mkdir -p storage/ \
   && mkdir -p storage/app/public \
@@ -39,12 +39,12 @@ RUN mkdir -p storage/ \
   && chown -R www-data:www-data storage/ \
   && chown -R root bootstrap/
 
-COPY composer* /webapp/
+COPY composer* /var/www/html/
 RUN composer install --no-progress --no-autoloader --no-suggest --no-interaction --ignore-platform-reqs --no-ansi --no-scripts
 
 RUN echo "xinh-test" > vendor/test.txt
 
-COPY ./ /webapp/
+COPY ./ /var/www/html/
 
 # Build JavaScript and CSS with Laravel Mix
 # COPY --from=nodejs /usr/local/lib/node_modules /usr/local/lib/node_modules/
@@ -62,4 +62,4 @@ RUN composer run post-autoload-dump
 
 RUN php artisan storage:link
 
-VOLUME ["/webapp", "/webapp/vendor", "/webapp/node_modules"]
+VOLUME ["/var/www/html", "/var/www/html/vendor", "/var/www/html/node_modules"]
