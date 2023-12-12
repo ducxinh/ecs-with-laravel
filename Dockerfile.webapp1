@@ -40,7 +40,7 @@ RUN mkdir -p storage/ \
   && chown -R root bootstrap/
 # TBD: This should move to entry point. initialize-laravel.sh === End
 
-COPY composer* /webapp/
+COPY composer* /var/www/html/
 
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
