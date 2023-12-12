@@ -62,4 +62,4 @@ RUN composer run post-autoload-dump
 
 RUN php artisan storage:link
 
-VOLUME ["/var/www/html", "/var/www/html/vendor", "/var/www/html/node_modules"]
+# VOLUME ["/var/www/html", "/var/www/html/vendor", "/var/www/html/node_modules"]
