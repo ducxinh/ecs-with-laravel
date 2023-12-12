@@ -52,7 +52,7 @@ COPY . .
 RUN composer install --optimize-autoloader --no-dev
 
 # Generate Laravel application key
-RUN php artisan key:generate
+# RUN php artisan key:generate
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
