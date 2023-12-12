@@ -20,7 +20,7 @@ RUN apt-get update \
     && apt-get clean -y
 
 COPY containers/webapp/*.sh /usr/local/bin/
-COPY containers/webapp/php8.1.ini /usr/local/etc/php/php.ini
+COPY containers/webapp/php8.2.ini /usr/local/etc/php/php.ini
 
 RUN mkdir -p storage/ \
   && mkdir -p storage/app/public \
