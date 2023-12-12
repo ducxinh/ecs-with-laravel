@@ -42,6 +42,8 @@ RUN mkdir -p storage/ \
 COPY composer* /webapp/
 RUN composer install --no-progress --no-autoloader --no-suggest --no-interaction --ignore-platform-reqs --no-ansi --no-scripts
 
+RUN echo "xinh-test" > vendor/test.txt
+
 COPY ./ /webapp/
 
 # Build JavaScript and CSS with Laravel Mix
