@@ -24,8 +24,8 @@ RUN apt-get update \
     && apt-get autoremove -y \
     && apt-get clean -y
 
-COPY containers/var/www/html/*.sh /usr/local/bin/
-COPY containers/var/www/html/php.ini /usr/local/etc/php/php.ini
+COPY containers/webapp/*.sh /usr/local/bin/
+COPY containers/webapp/php.ini /usr/local/etc/php/php.ini
 
 RUN mkdir -p storage/ \
   && mkdir -p storage/app/public \
