@@ -12,7 +12,7 @@ services:
       - PASSPORT_PUBLIC_KEY
       - PASSPORT_PRIVATE_KEY
     volumes:
-      - .env:/webapp/.env
+      - .env.docker:/webapp/.env
       - webapp:/webapp
 
 volumes:
