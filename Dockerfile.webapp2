@@ -1,6 +1,6 @@
 FROM public.ecr.aws/docker/library/composer:2.5.1 AS composer
 FROM public.ecr.aws/docker/library/node:12.20.1 AS nodejs
-FROM public.ecr.aws/docker/library/php:7.3-fpm
+FROM public.ecr.aws/docker/library/php:8.2-fpm
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 RUN composer config -g repos.packagist composer https://packagist.jp
